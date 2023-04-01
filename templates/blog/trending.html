@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+    
+    <h1 class="display-6">TRENDING BLOGS</h1>
+
+    {% get_most_commented_post as most_commented_post %}
+
+    {% for post in most_commented_post %}
+        <a href="{{post.get_absolute_url}}"><h3>{{post.title}}</h3></a>
+        <p id="date">{{post.status}} on {{post.publish}} by {{post.author | title}}</p>
+        <p id="tags">Tags: 
+            {% for tag in  post.tags.all %}
+            <a href="{% url 'post_list_by_tag_name' tag.slug %}">{{tag.name}},</a>
+            {% endfor %}
+        </p>
+        <P>{{post.body|truncatewords:30|linebreaks}}</p> 
+    {% endfor %}
+    {% include 'blog/pagination.html' with page=post_list %}
+    
+{% endblock content %}
+    
